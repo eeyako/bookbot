@@ -1,8 +1,8 @@
 import string
+import sys
 
-
-def main():
-    with open('books/frankenstein.txt') as f:
+def main(filepath):
+    with open(filepath) as f:
         file_contents = f.read()
         words = count_words(file_contents)
         chars = [{k: v} for k, v in count_characters(file_contents).items()]
@@ -34,4 +34,8 @@ def count_characters(text: str):
 
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) < 2:
+        raise Exception('No files were provided. Usage: python main.py {file_path}')
+
+    filepath = sys.argv[1]
+    main(filepath)
