@@ -27,8 +27,10 @@ def count_words(text: str):
 def count_characters(text: str):
     text = text.lower()
     char_count = {}
-    for letter in string.ascii_lowercase:
-        char_count[letter] = text.count(letter)
+    for char in text:
+        if not char.isalpha():
+            continue
+        char_count[char] = char_count.get(char, 0) + 1
 
     return char_count
 
