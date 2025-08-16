@@ -1,43 +1,41 @@
 import sys
 
+from stats import count_characters, get_num_words, sort_character_counts
 
-def main(filepath):
+
+def get_book_text(filepath):
     with open(filepath) as f:
         file_contents = f.read()
-        words = count_words(file_contents)
-        chars = [{k: v} for k, v in count_characters(file_contents).items()]
-        print(f"--- Begin report of {f.name} ---")
-        print_report(words, chars)
-        print("--- End report ---")
+    return file_contents
 
 
-def print_report(words, chars):
-    chars.sort(reverse=True, key=lambda n: list(n.values())[0])
-    print(f"{words} words found in the document\n")
-    for char in chars:
-        letter = list(char.keys())[0]
-        count = list(char.values())[0]
-        print(f"The '{letter}' character was found {count} times")
+def main(filepath):
+    print('============ BOOKBOT ============')
 
+    print(f'Analyzing book found at {filepath}...')
+    file_contents = get_book_text(filepath)
 
-def count_words(text: str):
-    return len(text.split())
+    print('----------- Word Count ----------')
+    num_words = get_num_words(file_contents)
+    print(f'Found {num_words} total words')
 
-
-def count_characters(text: str):
-    text = text.lower()
-    char_count = {}
-    for char in text:
-        if not char.isalpha():
+    print('--------- Character Count -------')
+    char_counts = count_characters(file_contents)
+    sorted_char_counts_list = sort_character_counts(char_counts)
+    for char_data in sorted_char_counts_list:
+        letter = list(char_data.keys())[0]
+        count = list(char_data.values())[0]
+        if not letter.isalpha():
             continue
-        char_count[char] = char_count.get(char, 0) + 1
+        print(f'{letter}: {count}')
 
-    return char_count
+    print('============= END ===============')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if len(sys.argv) < 2:
-        raise Exception("No files were provided. Usage: python main.py {file_path}")
+        print('Usage: python3 main.py <path_to_book>')
+        sys.exit(1)
 
     filepath = sys.argv[1]
     main(filepath)
